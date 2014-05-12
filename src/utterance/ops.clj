@@ -91,10 +91,10 @@
                (println "after:" (:count header))
                (btree-io/write-cache cache raf)
                (btree-io/write-header header raf)))
-           
+
            (catch Exception e
              (println "Failed to insert into B+ Tree."))))
-       
+
        (catch Exception e
          (println "Failed to fetch words from URL:" url)
          (verbose (.getMessage e))))))
@@ -118,7 +118,22 @@
 (defn remove!
   "Remove the entry associated with key from the B+ Tree."
   ([filename key & args]
-     (println "Operation not supported.")))
+     (try
+       (with-open [raf (new java.io.RandomAccessFile filename "rwd")]
+         (let [header (btree-io/read-header raf)
+               [updated-header cache]
+               (btree-ops/delete key raf header)]
+           (println "HEADER:" updated-header "\n\n")
+           (println "CACHE:" cache)
+           (if (= (:count header) (:count updated-header))
+             (println "Key not found.")
+             (do
+               (btree-io/write-cache cache raf)
+               (btree-io/write-header updated-header raf)))))
+
+       (catch Exception e
+         (println "Failed to remove from B+ Tree.")
+         (verbose (.printStackTrace e))))))
 
 (defn starts-with
   "Display all keys which start with the given string in the B+ Tree."
