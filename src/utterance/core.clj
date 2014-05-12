@@ -16,6 +16,7 @@
 (def commands
   {"init"               ops/init!,
    "clear"              ops/clear!,
+   "order"              ops/order,
    "elements"           ops/elements,
    "depth"              ops/depth,
    "find"               ops/find-val,
@@ -35,7 +36,10 @@
            "                 <command> [<args>]"
            ""
            "Options:"
-           summary]
+           summary
+           ""
+           "Commands:"
+           "TODO"]
           (string/join \newline))))
 
 

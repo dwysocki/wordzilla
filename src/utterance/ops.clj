@@ -5,7 +5,7 @@
             [b-plus-tree.core :as btree-ops]
             [b-plus-tree.io   :as btree-io]
             [url-scraper.core :as url]
-            [utterance.util :refer [verbose]]))
+            [utterance.util :refer [verbose-stacktrace]]))
 
 (defn init!
   "Initialize B+ Tree."
@@ -14,7 +14,7 @@
        (apply btree-io/new-tree filename (map #(Integer/parseInt %) args))
        (catch Exception e
          (println "Failed to initialize B+ Tree.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn clear!
   "Clear B+ Tree file."
@@ -31,7 +31,18 @@
            (btree-io/write-header empty-header raf)))
        (catch Exception e
          (println "Failed to clear B+ Tree.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
+
+(defn order
+  "Print the order of the B+ Tree."
+  ([filename]
+     (try
+       (with-open [raf (new java.io.RandomAccessFile filename "rwd")]
+         (let [header (btree-io/read-header raf)]
+           (println (:order header))))
+       (catch Exception e
+         (println "Failed to count elements in B+ Tree.")
+         (verbose-stacktrace e)))))
 
 (defn elements
   "Print the number of elements in the B+ Tree."
@@ -42,7 +53,7 @@
            (println (:count header))))
        (catch Exception e
          (println "Failed to count elements in B+ Tree.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn depth
   "Print the number of levels in the B+ Tree."
@@ -59,7 +70,7 @@
                         (str "Key not found.")))))
        (catch Exception e
          (println "Failed to search B+ Tree.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn insert!
   "Insert key and val into the B+ Tree."
@@ -74,7 +85,7 @@
            (btree-io/write-header header raf)))
        (catch Exception e
          (println "Failed to insert into B+ Tree.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn insert-url!
   "Insert all words from the given url into the B+ Tree."
@@ -93,11 +104,12 @@
                (btree-io/write-header header raf)))
 
            (catch Exception e
-             (println "Failed to insert into B+ Tree."))))
+             (println "Failed to insert into B+ Tree.")
+             (verbose-stacktrace e))))
 
        (catch Exception e
          (println "Failed to fetch words from URL:" url)
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn insert-all!
   "Insert all words from the given url-file into the B+ Tree.
@@ -113,7 +125,7 @@
 
        (catch Exception e
          (println "Failed to read file.")
-         (verbose (.getMessage e))))))
+         (verbose-stacktrace e)))))
 
 (defn remove!
   "Remove the entry associated with key from the B+ Tree."
@@ -133,7 +145,7 @@
 
        (catch Exception e
          (println "Failed to remove from B+ Tree.")
-         (verbose (.printStackTrace e))))))
+         (verbose-stacktrace e)))))
 
 (defn starts-with
   "Display all keys which start with the given string in the B+ Tree."

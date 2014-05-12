@@ -26,6 +26,10 @@
   "When *verbose* is true, outputs body to stderr."
   ([& more] (when *verbose* (apply println-err more))))
 
+(defn verbose-stacktrace
+  "When *verbose* is true, prints the stacktrace held by the exception."
+  ([exception] (when *verbose* (.printStackTrace exception))))
+
 (defn exit
   "Exit the program with the status and message if given, otherwise status 0."
   ([]                         (System/exit 0))
