@@ -5,6 +5,6 @@
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.cli "0.3.1"]
-                 [b-plus-tree "0.2.0-SNAPSHOT"]
+                 [b-plus-tree "0.2.0"]
                  [url-scraper "0.1.0"]]
   :main utterance.core)

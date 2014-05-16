@@ -135,8 +135,8 @@
          (let [header (btree-io/read-header raf)
                [updated-header cache]
                (btree-ops/delete key raf header)]
-           (println "HEADER:" updated-header "\n\n")
-           (println "CACHE:" cache)
+;           (println "HEADER:" updated-header "\n\n")
+;           (println "CACHE:" cache)
            (if (= (:count header) (:count updated-header))
              (println "Key not found.")
              (do
